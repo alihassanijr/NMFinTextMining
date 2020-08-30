@@ -16,6 +16,32 @@ class SparseNMF(NMF):
                                         alpha=alpha, l1_ratio=l1_ratio, verbose=verbose,
                                         shuffle=shuffle)
 
+    def fit_transform(self, X, y=None, W=None, H=None):
+        """Learn a NMF model for the data X and returns the transformed data.
+
+        This is more efficient than calling fit followed by transform.
+
+        Parameters
+        ----------
+        X : {array-like, sparse matrix}, shape (n_samples, n_features)
+            Data matrix to be decomposed
+
+        y : Ignored
+
+        W : array-like, shape (n_samples, n_components)
+            If init='custom', it is used as initial guess for the solution.
+
+        H : array-like, shape (n_components, n_features)
+            If init='custom', it is used as initial guess for the solution.
+
+        Returns
+        -------
+        W : array, shape (n_samples, n_components)
+            Transformed data.
+        """
+        W, H = init_nmf(X, self.n_components)
+        W = super(SparseNMF, self).fit_transform(X, W=W, H=H)
+
     def fit(self, X, y=None, **params):
         """Learn a NMF model for the data X.
 
@@ -30,8 +56,7 @@ class SparseNMF(NMF):
         -------
         self
         """
-        W, H = init_nmf(X, self.n_components)
-        self.fit_transform(X, W=W, H=H)
+        self.fit_transform(X, **params)
         return self
 
 
