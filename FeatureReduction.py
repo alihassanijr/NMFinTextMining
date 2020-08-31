@@ -19,9 +19,12 @@ class TermDocumentReduce:
     def fit_transform(self, X):
         if self.cluster_assignments is None:
             self.fit(X)
+        return self.transform(X)
+
+    def transform(self, X):
+        assert self.cluster_assignments is not None
         x_new = np.zeros((X.shape[0], self.n_components))
         for c in range(self.n_components):
             terms = np.where(self.cluster_assignments == c)[0]
             x_new[:, c] = np.linalg.norm(X[:, terms], axis=1)
         return x_new
-

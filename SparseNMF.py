@@ -40,7 +40,7 @@ class SparseNMF(NMF):
             Transformed data.
         """
         W, H = init_nmf(X, self.n_components)
-        W = super(SparseNMF, self).fit_transform(X, W=W, H=H)
+        return super(SparseNMF, self).fit_transform(X, W=W, H=H)
 
     def fit(self, X, y=None, **params):
         """Learn a NMF model for the data X.
