@@ -13,6 +13,27 @@ Moreover, you can find a new method which uses NMF to cluster the features (term
 - Scikit-Learn (>= 0.23)
 
 
+## Examples
+### Using SparseNMF
+This particular class performs exactly the same as the one from Scikit-Learn, and takes the same set of arguments, except for `init`. That is because the initialization is based on SparseNMF by default.
+```python
+from SparseNMF import SparseNMF
+nmf = SparseNMF(n_components=10)
+W = nmf.fit_transform(X)
+H = nmf.components_
+```
+
+### Using the feature reduction method
+You are required to vectorize your documents first (i.e. using CountVectorizer or TFIDFVectorizer from Scikit-Learn).
+
+```python
+from FeatureReduction import TermDocumentReduce
+tr = TermDocumentReduce(n_components=10)
+X_10 = tr.fit_transform(X_tfidf)
+```
+It is highly recommended to normalize your data when clustering using Euclidean distance (use scikit's `Normalizer`).
+
+
 ## References
 <div id="svdinit">
 [1] Boutsidis, Christos, and Efstratios Gallopoulos. "SVD based initialization: A head start for nonnegative matrix factorization." Pattern recognition 41, no. 4 (2008): 1350-1362.
