@@ -3,7 +3,12 @@
 I came up with the idea of using nonnegative matrix factorization as a dimension reduction method for term-document matrices. Obviously, since NMF using random initialization may not be as stable as one would hope, carefully initializing it is what's required. You can read the paper by Boutsidis et al. <a href="#svdinit">[1]</a> on initializing NMF using singular value decomposition.
 
 However, the catch is that numerically, using standard SVD initialization will not result in an appropriate approximation. Therefore I slightly modified the NMF module from Scikit-Learn to use Scipy's sparse SVD instead of the regular SVD.
-Moreover, you can find a new method which uses NMF to cluster the features (terms) into topics which can later be used to change the feature space for better clustering results.
+
+When NMF decomposes a matrix ![formula](https://render.githubusercontent.com/render/math?math=A) into ![formula](https://render.githubusercontent.com/render/math?math=A=WH) with ![formula](https://render.githubusercontent.com/render/math?math=k) components, taking an argmax of the rows of ![formula](https://render.githubusercontent.com/render/math?math=W) and columns of ![formula](https://render.githubusercontent.com/render/math?math=H) can be used to "cluster" the rows and columns of ![formula](https://render.githubusercontent.com/render/math?math=A) respectively.
+
+
+`TermDocumentReduce` uses NMF to cluster the features (terms) into topics which can later be used to change the feature space for better clustering results.
+
 
 
 ## Dependencies
@@ -27,7 +32,7 @@ H = nmf.components_
 You are required to vectorize your documents first (i.e. using CountVectorizer or TFIDFVectorizer from Scikit-Learn).
 
 ```python
-from FeatureReduction import TermDocumentReduce
+from NMFClustering import TermDocumentReduce
 tr = TermDocumentReduce(n_components=10)
 X_10 = tr.fit_transform(X_tfidf)
 ```
