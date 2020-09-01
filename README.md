@@ -8,6 +8,8 @@ When NMF decomposes a matrix ![formula](https://render.githubusercontent.com/ren
 
 
 `TermDocumentReduce` uses NMF to cluster the features (terms) into topics which can later be used to change the feature space for better clustering results.
+`NMFDocumentClustering` uses NMF to cluster the samples (documents) by applying the argmax operator to the matrix ![formula](https://render.githubusercontent.com/render/math?math=W).
+Theoretical explanation for this use of operators and how it relates to clustering will be added soon.
 
 
 
