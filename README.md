@@ -6,9 +6,9 @@ However, the catch is that numerically, using standard SVD initialization will n
 
 When NMF decomposes a matrix ![formula](https://render.githubusercontent.com/render/math?math=A) into ![formula](https://render.githubusercontent.com/render/math?math=A=WH) with ![formula](https://render.githubusercontent.com/render/math?math=k) components, taking an argmax of the rows of ![formula](https://render.githubusercontent.com/render/math?math=W) and columns of ![formula](https://render.githubusercontent.com/render/math?math=H) can be used to "cluster" the rows and columns of ![formula](https://render.githubusercontent.com/render/math?math=A) respectively.
 
+`NMFCluster` uses NMF to cluster the samples (documents) by applying the argmax operator to the matrix ![formula](https://render.githubusercontent.com/render/math?math=W), while also clustering the terms into "topics" by applying the same strategy to ![formula](https://render.githubusercontent.com/render/math?math=H).
 
-`TermDocumentReduce` uses NMF to cluster the features (terms) into topics which can later be used to change the feature space for better clustering results.
-`NMFDocumentClustering` uses NMF to cluster the samples (documents) by applying the argmax operator to the matrix ![formula](https://render.githubusercontent.com/render/math?math=W).
+`TermDocumentReduce` uses `NMFCluster` to group the features (terms) into topics, and then the feature (term) vectors in each topic will be combined into a single vector thus forming a new ![formula](https://render.githubusercontent.com/render/math?math=k) - dimensional space.
 Theoretical explanation for this use of operators and how it relates to clustering will be added soon.
 
 
@@ -21,21 +21,33 @@ Theoretical explanation for this use of operators and how it relates to clusteri
 
 
 ## Examples
-### Using SparseNMF
+### SparseNMF
 This particular class performs exactly the same as the one from Scikit-Learn, and takes the same set of arguments, except for `init`. That is because the initialization is based on SparseNMF by default.
-```python
+```python3
 from SparseNMF import SparseNMF
 nmf = SparseNMF(n_components=10)
 W = nmf.fit_transform(X)
 H = nmf.components_
 ```
 
-### Using the feature reduction method
+### NMFClustering
 You are required to vectorize your documents first (i.e. using CountVectorizer or TFIDFVectorizer from Scikit-Learn).
 
-```python
+Assuming `X` is a transposed term-document matrix (![formula](https://render.githubusercontent.com/render/math?math={d \times t})):
+#### NMF Clustering Method
+```python3
+from NMFClustering import NMFCluster
+nc = NMFCluster(n_clusters=k)
+nc.fit(X)
+DocumentClusterAssignments = nc.labels_
+TermClusterAssignments = nc.topics_
+```
+`DocumentClusterAssignments` will be a ![formula](https://render.githubusercontent.com/render/math?math=d) - dimensional vector representing the index of the cluster to which each document is assigned.
+`TermClusterAssignments` on the other hand will be a ![formula](https://render.githubusercontent.com/render/math?math=t) - dimensional vector representing the index of the cluster (symbolic topic) to which each term is assigned.
+#### Term-Document Feature Reduction
+```python3
 from NMFClustering import TermDocumentReduce
-tr = TermDocumentReduce(n_components=10)
+tr = TermDocumentReduce(n_components=k)
 X_10 = tr.fit_transform(X_tfidf)
 ```
 It is highly recommended to normalize your data when clustering using Euclidean distance (use scikit's `Normalizer`).
