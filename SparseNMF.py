@@ -6,6 +6,10 @@ from sklearn.utils.extmath import svd_flip, squared_norm
 
 
 class SparseNMF(NMF):
+    """
+    Performs exactly the same as Scikit-Learn's NMF, with the `init` parameter fixed to a variant of `nndsvd`
+    which was implemented to use scipy's sparse svd instead of the regular.
+    """
     def __init__(self, n_components=None, solver='cd',
                  beta_loss='frobenius', tol=1e-4, max_iter=200,
                  random_state=None, alpha=0., l1_ratio=0., verbose=0,
@@ -74,6 +78,26 @@ def norm(x):
 
 
 def init_nmf(X, n_components, eps=1e-6):
+    """
+    Initialize NMF using Sparse SVD
+
+    Parameters
+    ----------
+    X            : array-like
+                   Vector for which to compute the norm
+
+    n_components : int
+                   Number of components
+
+    eps          : float
+                   Epsilon parameter
+
+    Returns
+    -------
+    W : array-like
+    H : array-like
+
+    """
     U, S, V = svds(X, n_components)
     S = S[::-1]
     U, V = svd_flip(U[:, ::-1], V[::-1])
